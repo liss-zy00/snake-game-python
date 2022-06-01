@@ -12,6 +12,7 @@ class Config():
 
     def gameLoop():
         global event, gameOver
+        pygame.init()
 
         Config.colors()
         Config.screenDefinition()
@@ -27,7 +28,7 @@ class Config():
             if not gameOver:
                 screen.fill(black)
 
-                pygame.draw.rect(screen, green, [snakeX, snakeY, 10, 10]) #fruit square
+                pygame.draw.rect(screen, green, [snakeX, snakeY, 10, 10]) #snake square
                 Config.snakeSizeUpdate()
             
                 pygame.draw.rect(screen, red, [fruitX, fruitY, 10, 10]) #fruit square
@@ -38,7 +39,11 @@ class Config():
 
             else:
                 screen.fill(white)
+                Config.message_display(f"Final Score: {gameScore}", screenWidth / 2, 100, 25, black)
                 
+            Config.message_display(f"Score: {gameScore}", 60, 25, 25, white)
+
+            pygame.display.update()
             pygame.display.flip()
             clock.tick(snakeSpeed)
 
@@ -48,7 +53,6 @@ class Config():
 
                 if event.type == pygame.QUIT:
                     running = False
-
     
     def keyboardEventListener():
         global speedX, speedY
@@ -68,6 +72,20 @@ class Config():
         if event.key == pygame.K_RIGHT:
             speedY = 0
             speedX = 2
+    
+    def text_objects(text, font, color):
+        global textSurface
+
+        textSurface = font.render(text, True, color)
+        return textSurface, textSurface.get_rect()
+
+    def message_display(text, textLargura, textAltura, size, color):
+        global theFont
+
+        theFont = pygame.font.Font("freesansbold.ttf", size)
+        textSurf, textRect = Config.text_objects(text, theFont, color)
+        textRect.center =(textLargura, textAltura)
+        screen.blit(textSurf, textRect)
 
     def colors():
         global black, white, green, red
@@ -79,15 +97,17 @@ class Config():
 
 #snake settings
     def snakeSpawn():
-        global snakeX, snakeY, snakeSpeed, snakeSize, snakeLength, snakeBlocks
+        global snakeX, snakeY, snakeSpeed, snakeSize, snakeLength, snakeBlocks, gameScore
 
         snakeX = screenWidth / 2
         snakeY = screenHeight / 2
-        snakeSpeed = 30
+        snakeSpeed = 40
 
         snakeSize = 10
         snakeLength = 1
         snakeBlocks = []
+
+        gameScore = 0
 
     def snakeSpeedSetting():
         global speedX, speedY
@@ -138,9 +158,10 @@ class Config():
         fruitY = 400
 
     def fruitRandomSpawn():
-        global fruitX, fruitY, snakeLength
+        global fruitX, fruitY, snakeLength, gameScore
 
         if snakeX == fruitX and snakeY == fruitY:
-            snakeLength += 4.5 #????? 
+            gameScore += 1
+            snakeLength += 5 #????? 
             fruitX = round(random.randrange(0, screenWidth - 10) / 10.0) * 10.0
             fruitY = round(random.randrange(0, screenHeight - 10) / 10.0) * 10.0
