@@ -11,7 +11,7 @@ class Config():
         screen = pygame.display.set_mode((screenWidth, screenHeight))
 
     def gameLoop():
-        global event, gameOver
+        global event, gameOver, gameScore, gameRun
         pygame.init()
 
         Config.colors()
@@ -21,10 +21,11 @@ class Config():
         Config.snakeSpeedSetting()
         
         clock = pygame.time.Clock()
-        running = True
+        gameScore = 0
+        gameRun = True
         gameOver = False
 
-        while running:
+        while gameRun:
             if not gameOver:
                 screen.fill(black)
 
@@ -40,6 +41,9 @@ class Config():
             else:
                 screen.fill(white)
                 Config.message_display(f"Final Score: {gameScore}", screenWidth / 2, 100, 25, black)
+                Config.message_display(f"Thanks for playing", screenWidth / 2, 135, 25, black)
+                Config.message_display(f"Press 'Q' to quit", screenWidth / 2, 200, 25, black)
+                Config.message_display(f"Press 'space' to restart", screenWidth / 2, 235, 25, black)
                 
             Config.message_display(f"Score: {gameScore}", 60, 25, 25, white)
 
@@ -52,10 +56,16 @@ class Config():
                     Config.keyboardEventListener()
 
                 if event.type == pygame.QUIT:
-                    running = False
+                    gameRun = False
     
     def keyboardEventListener():
-        global speedX, speedY
+        global speedX, speedY, gameRun
+
+        if event.key == pygame.K_SPACE:
+            Config.gameLoop()
+        
+        if event.key == pygame.K_q:
+            gameRun = False
 
         if event.key == pygame.K_UP:
             speedX = 0
@@ -97,7 +107,7 @@ class Config():
 
 #snake settings
     def snakeSpawn():
-        global snakeX, snakeY, snakeSpeed, snakeSize, snakeLength, snakeBlocks, gameScore
+        global snakeX, snakeY, snakeSpeed, snakeSize, snakeLength, snakeBlocks
 
         snakeX = screenWidth / 2
         snakeY = screenHeight / 2
@@ -106,8 +116,6 @@ class Config():
         snakeSize = 10
         snakeLength = 1
         snakeBlocks = []
-
-        gameScore = 0
 
     def snakeSpeedSetting():
         global speedX, speedY
