@@ -14,7 +14,7 @@ class Config():
         pygame.display.set_icon(pygame.image.load('snake.png'))
 
     def gameLoop():
-        global event, gameOver, gameScore, gameRun
+        global event, gameOver, gameRun
         pygame.init()
 
         Config.colors()
@@ -23,10 +23,9 @@ class Config():
         Config.fruitPositionSetting()
         Config.snakeSpeedSetting()
         
-        clock = pygame.time.Clock()
-        gameScore = 0
         gameRun = True
         gameOver = False
+        clock = pygame.time.Clock()
 
         while gameRun:
             if not gameOver:
@@ -43,12 +42,12 @@ class Config():
 
             else:
                 screen.fill(white)
-                Config.message_display(f"Final Score: {gameScore}", screenWidth / 2, 100, 25, black)
+                Config.message_display(f"Final Score: {snakeLength}", screenWidth / 2, 100, 25, black)
                 Config.message_display(f"Thanks for playing", screenWidth / 2, 135, 25, black)
                 Config.message_display(f"Press 'Q' to quit", screenWidth / 2, 200, 25, black)
                 Config.message_display(f"Press 'space' to restart", screenWidth / 2, 235, 25, black)
                 
-            Config.message_display(f"Score: {gameScore}", 60, 20, 25, white)
+            Config.message_display(f"Score: {snakeLength}", 60, 20, 25, white)
 
             pygame.display.update()
             pygame.display.flip()
@@ -72,19 +71,19 @@ class Config():
 
         if event.key == pygame.K_UP:
             speedX = 0
-            speedY = -2
+            speedY = -10
             
         if event.key == pygame.K_DOWN:
             speedX = 0
-            speedY = 2
+            speedY = 10
 
         if event.key == pygame.K_LEFT:
             speedY = 0
-            speedX = -2
+            speedX = -10
             
         if event.key == pygame.K_RIGHT:
             speedY = 0
-            speedX = 2
+            speedX = 10
     
     def text_objects(text, font, color):
         global textSurface
@@ -114,7 +113,7 @@ class Config():
 
         snakeX = screenWidth / 2
         snakeY = screenHeight / 2
-        snakeSpeed = 40
+        snakeSpeed = 15
 
         snakeSize = 10
         snakeLength = 1
@@ -169,10 +168,9 @@ class Config():
         fruitY = 400
 
     def fruitRandomSpawn():
-        global fruitX, fruitY, snakeLength, gameScore
+        global fruitX, fruitY, snakeLength
 
         if snakeX == fruitX and snakeY == fruitY:
-            gameScore += 1
-            snakeLength += 5 #????? 
+            snakeLength += 1
             fruitX = round(random.randrange(0, screenWidth - 10) / 10.0) * 10.0
             fruitY = round(random.randrange(0, screenHeight - 10) / 10.0) * 10.0
