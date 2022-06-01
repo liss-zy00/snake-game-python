@@ -1,4 +1,4 @@
 from configuration import Config
 
-class Game:
+class Main:
     Config.gameLoop()
