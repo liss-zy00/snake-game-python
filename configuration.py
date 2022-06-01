@@ -11,7 +11,7 @@ class Config():
         screen = pygame.display.set_mode((screenWidth, screenHeight))
 
     def gameLoop():
-        global event
+        global event, gameOver
 
         Config.colors()
         Config.screenDefinition()
@@ -21,18 +21,24 @@ class Config():
         
         clock = pygame.time.Clock()
         running = True
+        gameOver = False
 
         while running:
-            screen.fill(black)
+            if not gameOver:
+                screen.fill(black)
 
-            pygame.draw.rect(screen, green, [snakeX, snakeY, 10, 10]) #fruit square
-            Config.snakeSizeUpdate()
+                pygame.draw.rect(screen, green, [snakeX, snakeY, 10, 10]) #fruit square
+                Config.snakeSizeUpdate()
             
-            pygame.draw.rect(screen, red, [fruitX, fruitY, 10, 10]) #fruit square
-            
-            Config.snakePositionUpdate()
-            Config.fruitRandomSpawn()
+                pygame.draw.rect(screen, red, [fruitX, fruitY, 10, 10]) #fruit square
+                
+                Config.snakePositionUpdate()
+                Config.fruitRandomSpawn()
+                Config.snakeWallCollision()
 
+            else:
+                screen.fill(white)
+                
             pygame.display.flip()
             clock.tick(snakeSpeed)
 
@@ -42,6 +48,7 @@ class Config():
 
                 if event.type == pygame.QUIT:
                     running = False
+
     
     def keyboardEventListener():
         global speedX, speedY
@@ -104,9 +111,24 @@ class Config():
 
         if len(snakeBlocks) > snakeLength:
             del snakeBlocks[0]
+        
+        Config.snakeTailCollision()
 
         for block in snakeBlocks:
             pygame.draw.rect(screen, green, [block[0], block[1], snakeSize, snakeSize])
+
+    def snakeWallCollision():
+        global gameOver
+
+        if (snakeX >= screenWidth or snakeX < 0 or snakeY >= screenHeight or snakeY < 0):
+            gameOver = True
+
+    def snakeTailCollision():
+        global gameOver
+
+        for x in snakeBlocks[:-1]:
+            if x == snakeHead:
+                gameOver = True
 
 #fruit settings
     def fruitPositionSetting():
