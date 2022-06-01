@@ -10,6 +10,9 @@ class Config():
         screenHeight = 480
         screen = pygame.display.set_mode((screenWidth, screenHeight))
 
+        pygame.display.set_caption('Snake Game')
+        pygame.display.set_icon(pygame.image.load('snake.png'))
+
     def gameLoop():
         global event, gameOver, gameScore, gameRun
         pygame.init()
@@ -45,7 +48,7 @@ class Config():
                 Config.message_display(f"Press 'Q' to quit", screenWidth / 2, 200, 25, black)
                 Config.message_display(f"Press 'space' to restart", screenWidth / 2, 235, 25, black)
                 
-            Config.message_display(f"Score: {gameScore}", 60, 25, 25, white)
+            Config.message_display(f"Score: {gameScore}", 60, 20, 25, white)
 
             pygame.display.update()
             pygame.display.flip()
