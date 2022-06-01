@@ -1,4 +1,5 @@
 import pygame
+import random
 
 class Config():
     
@@ -12,18 +13,25 @@ class Config():
     def gameLoop():
         global event
 
+        Config.colors()
         Config.screenDefinition()
         Config.snakeSpawn()
-        Config.speedSetting()
+        Config.fruitPositionSetting()
+        Config.snakeSpeedSetting()
         
         clock = pygame.time.Clock()
         running = True
 
         while running:
-            screen.fill((0, 0, 0))
-            pygame.draw.rect(screen, (0, 255, 0), [snakeX, snakeY, 10, 10]) #snake square
+            screen.fill(black)
+
+            pygame.draw.rect(screen, green, [snakeX, snakeY, 10, 10]) #fruit square
+            Config.snakeSizeUpdate()
+            
+            pygame.draw.rect(screen, red, [fruitX, fruitY, 10, 10]) #fruit square
             
             Config.snakePositionUpdate()
+            Config.fruitRandomSpawn()
 
             pygame.display.flip()
             clock.tick(snakeSpeed)
@@ -34,29 +42,6 @@ class Config():
 
                 if event.type == pygame.QUIT:
                     running = False
-
-    def snakeSpawn():
-        global snakeSpeed, snakeX, snakeY
-        
-        snakeX = screenWidth / 2
-        snakeY = screenHeight / 2
-        snakeSpeed = 50
-
-        #snakSize = 10
-        #snakeLength = 1
-        #snakeBlocks = []
-
-    def speedSetting():
-        global speedX, speedY
-
-        speedX = 0
-        speedY = 0
-
-    def snakePositionUpdate():
-        global snakeX, snakeY
-
-        snakeX += speedX
-        snakeY += speedY
     
     def keyboardEventListener():
         global speedX, speedY
@@ -77,3 +62,63 @@ class Config():
             speedY = 0
             speedX = 2
 
+    def colors():
+        global black, white, green, red
+
+        black = (0, 0, 0)
+        white = (255, 255, 255)
+        green = (0, 255, 0)
+        red = (255, 0, 0)
+
+#snake settings
+    def snakeSpawn():
+        global snakeX, snakeY, snakeSpeed, snakeSize, snakeLength, snakeBlocks
+
+        snakeX = screenWidth / 2
+        snakeY = screenHeight / 2
+        snakeSpeed = 30
+
+        snakeSize = 10
+        snakeLength = 1
+        snakeBlocks = []
+
+    def snakeSpeedSetting():
+        global speedX, speedY
+
+        speedX = 0
+        speedY = 0
+
+    def snakePositionUpdate():
+        global snakeX, snakeY
+
+        snakeX += speedX
+        snakeY += speedY
+
+    def snakeSizeUpdate():
+        global snakeHead, snakeBlocks
+
+        snakeHead = []
+        snakeHead.append(snakeX)
+        snakeHead.append(snakeY)
+        snakeBlocks.append(snakeHead)
+
+        if len(snakeBlocks) > snakeLength:
+            del snakeBlocks[0]
+
+        for block in snakeBlocks:
+            pygame.draw.rect(screen, green, [block[0], block[1], snakeSize, snakeSize])
+
+#fruit settings
+    def fruitPositionSetting():
+        global fruitX, fruitY
+
+        fruitX = 300
+        fruitY = 400
+
+    def fruitRandomSpawn():
+        global fruitX, fruitY, snakeLength
+
+        if snakeX == fruitX and snakeY == fruitY:
+            snakeLength += 4.5 #????? 
+            fruitX = round(random.randrange(0, screenWidth - 10) / 10.0) * 10.0
+            fruitY = round(random.randrange(0, screenHeight - 10) / 10.0) * 10.0
